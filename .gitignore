@@ -1,0 +1,11 @@
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__
+staticfiles
+.DS_Store
+**/migrations/*
+
+### Backup ###
+*.bak
