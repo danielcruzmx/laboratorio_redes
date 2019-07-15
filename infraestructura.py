@@ -26,7 +26,32 @@ class imagen:
         for r in response[1]:
             for key, value in r.iteritems():
                 print str(value)
- 
+
+class red:
+
+    def __init__(self, item):
+        self.client = docker.from_env(version="auto")
+        self.nombre = item['name']
+        self.item = item
+        if not self._exists():
+            self.create()
+
+    def _exists(self):
+        c = self.client.networks.list()
+        for n in c:
+            #print n.name, self.nombre
+            if n.name == self.nombre:
+                return n.name
+        return None
+        
+    def create(self):
+        if self.client:
+            self.client.networks.create(self.nombre,driver=self.item['driver'])
+            
+    def get_nombre(self):
+        if self.client:
+            return self.nombre
+                
 class contenedor:
 
     def __init__(self, item):
@@ -42,7 +67,7 @@ class contenedor:
                 ret = c
                 break
         return ret
-
+        
     def stop(self):
         self.c = self.__exists()
         if self.c:
@@ -83,25 +108,28 @@ class contenedor:
         self.c = self.__exists()
         if not self.c:
             self.client.containers.create(image       = self.item['image'],          \
-                                                 name        = self.item['name'],           \
-                                                 ports       = self.item['ports'],          \
-                                                 links       = self.item['links'],          \
-                                                 environment = self.item['environment'],    \
-                                                 volumes     = self.item['volumes'],        \
-                                                 entrypoint  = self.item['entrypoint'],     \
-                                                 detach      = True,                        \
-                                                 tty         = True,                        \
-                                                 init        = True)  
+                                          name        = self.item['name'],           \
+                                          ports       = self.item['ports'],          \
+                                          links       = self.item['links'],          \
+                                          environment = self.item['environment'],    \
+                                          volumes     = self.item['volumes'],        \
+                                          entrypoint  = self.item['entrypoint'],     \
+                                          cap_add     = self.item['cap_add'],        \
+                                          mac_address = self.item['mac_address'],    \
+                                          network     = self.item['network'],        \
+                                          detach      = True,                        \
+                                          tty         = True,                        \
+                                          init        = True)  
 
     def execute(self, command, pathdir):
         self.c = self.__exists()
         if self.c:
             if self.c.attrs['State']['Status'] == 'running':
-                print self.client.containers.model.\
+                return self.client.containers.model.\
                       exec_run(self.c, cmd=command, tty=True, workdir=pathdir)
             else:
-                print ""
-                print " El contenedor ", self.c.attrs['Name'].split('/')[1], " no esta en ejecucion. "
+                #print ""
+                return " El contenedor ", self.c.attrs['Name'].split('/')[1], " no esta en ejecucion. "
  
     def put_file(self, dir, datos):
         self.c = self.__exists()

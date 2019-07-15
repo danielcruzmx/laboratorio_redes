@@ -7,7 +7,7 @@ def get_mac(ip_address):
     # hwdst "ff:ff:ff:ff:ff:ff" broadcast
     resp, unans = sr(ARP(op=1, hwdst="ff:ff:ff:ff:ff:ff", pdst=ip_address), retry=2, timeout=10)
     for s,r in resp:
-        return r[ARP.hwsrc]
+        return r[ARP].hwsrc
 
 # restablece la RED 
 def restore_network(v1_ip, v1_mac, v2_ip, v2_mac):
