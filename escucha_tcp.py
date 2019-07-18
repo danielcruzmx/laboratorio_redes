@@ -1,6 +1,10 @@
 from scapy.all import *
 
-res=sniff(filter="tcp port 80")
+print("Escuchando durante 10 segundos")
+res=sniff(filter="tcp port 80", timeout=10)
+print('Sniffer recibio %d packet(s)' % len(res))
 for pkt in res:
 	if TCP in pkt:
-		print "\n".join(pkt.sprintf("{Raw:%Raw. load%}\n").split(r"\r\n"))
+		content = "\n".join(pkt.sprintf("{Raw:%Raw.load%}\n").split(r"\r\n"))
+		stripped = re.sub('<[^<]+?>', '', content)	
+		print(stripped)

@@ -19,21 +19,12 @@ def __main__():
       'driver': 'bridge'
     })
      
+    imagen = 'ubuntu_lab'
+
     INFRAESTRUCTURA = \
-        [{'image': 'ubuntunet',
+        [{'image': imagen,
           'name': 'victima',
           'ports': {'6000/tcp': 6000},
-          'links': {},
-          'entrypoint': '/bin/bash',
-          'environment': [],
-          'cap_add': ['NET_ADMIN'],
-          'network': net.get_nombre(),
-          'mac_address': '00:00:00:00:00:01',
-          'volumes': {parent_dir: {'bind': '/home', 'mode': 'rw'}}               
-          },
-          {'image': 'ubuntunet',
-          'name': 'atacante',
-          'ports': {'6000/tcp': 6001},
           'links': {},
           'entrypoint': '/bin/bash',
           'environment': [],
@@ -42,7 +33,18 @@ def __main__():
           'mac_address': '00:00:00:00:00:02',
           'volumes': {parent_dir: {'bind': '/home', 'mode': 'rw'}}               
           },
-          {'image': 'ubuntunet',
+          {'image': imagen,
+          'name': 'atacante',
+          'ports': {'6000/tcp': 6001},
+          'links': {},
+          'entrypoint': '/bin/bash',
+          'environment': [],
+          'cap_add': ['NET_ADMIN'],
+          'network': net.get_nombre(),
+          'mac_address': '00:00:00:00:00:03',
+          'volumes': {parent_dir: {'bind': '/home', 'mode': 'rw'}}               
+          },
+          {'image': imagen,
           'name': 'server',
           'ports': {'6000/tcp': 6002},
           'links': {},
@@ -50,7 +52,7 @@ def __main__():
           'environment': [],
           'cap_add': ['NET_ADMIN'],
           'network': net.get_nombre(),
-          'mac_address': '00:00:00:00:00:03',
+          'mac_address': '00:00:00:00:00:04',
           'volumes': {parent_dir: {'bind': '/home', 'mode': 'rw'}}               
           }
          ]
